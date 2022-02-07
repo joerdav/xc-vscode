@@ -2,6 +2,8 @@
 
 A vscode extension to allow the running of XC tasks.
 
+![xc demo](./xc.gif)
+
 ## Features
 
 Adds an XC command in vscode.
