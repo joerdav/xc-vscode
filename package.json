@@ -5,7 +5,7 @@
   },
   "displayName": "xc-vscode",
   "description": "",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "xc-vscode",
   "engines": {
     "vscode": "^1.62.0"
