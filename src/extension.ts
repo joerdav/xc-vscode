@@ -67,7 +67,7 @@ export class Task extends vscode.TreeItem {
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export function activate() {
   const rootPath =
     vscode.workspace.workspaceFolders &&
     vscode.workspace.workspaceFolders.length > 0
@@ -75,9 +75,10 @@ export function activate(context: vscode.ExtensionContext) {
       : "";
 
   vscode.commands.registerCommand("xc-vscode.xc", (cmd) => {
+    const termName = `xc - ${cmd}`;
     const term =
-      vscode.window.terminals.find((t) => t.name === "xc-vscode") ??
-      vscode.window.createTerminal("xc-vscode");
+      vscode.window.terminals.find((t) => t.name === termName) ??
+      vscode.window.createTerminal(termName);
 
     term.sendText("cd " + rootPath, true);
     term.sendText("xc " + cmd, true);
@@ -90,8 +91,7 @@ export function activate(context: vscode.ExtensionContext) {
   vscode.window.createTreeView("xc-vscode.xcTasksContainer", {
     treeDataProvider: taskProvider,
   });
-
-  vscode.commands.registerCommand("xc-vscode.refreshEntry", () =>
+vscode.commands.registerCommand("xc-vscode.refreshEntry", () =>
     taskProvider.refresh()
   );
 }
