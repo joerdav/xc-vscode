@@ -5,7 +5,7 @@
   },
   "displayName": "XC",
   "description": "",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "publisher": "xc-vscode",
   "icon": "resources/xc.png",
   "engines": {

@@ -22,11 +22,11 @@ export class TaskProvider implements vscode.TreeDataProvider<Task> {
 
   getChildren(element?: Task): Thenable<Task[]> {
     if (!element) {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         const dir = this.workspaceRoot;
         cp.exec(`xc -short`, { cwd: dir }, (err, stdout, stderr) => {
           if (err) {
-            reject(err);
+            resolve([]);
             return;
           }
           let items: Task[] = [];
