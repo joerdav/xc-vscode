@@ -3,10 +3,11 @@
   "repository": {
     "url": "https://github.com/joe-davidson1802/xc-vscode"
   },
-  "displayName": "xc-vscode",
+  "displayName": "XC",
   "description": "",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "publisher": "xc-vscode",
+  "icon": "resources/xc.png",
   "engines": {
     "vscode": "^1.62.0"
   },
