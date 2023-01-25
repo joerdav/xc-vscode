@@ -1,11 +1,11 @@
 {
   "name": "xc-vscode",
   "repository": {
-    "url": "https://github.com/joe-davidson1802/xc-vscode"
+    "url": "https://github.com/joerdav/xc-vscode"
   },
   "displayName": "XC",
   "description": "",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "publisher": "xc-vscode",
   "icon": "resources/xc.png",
   "engines": {
