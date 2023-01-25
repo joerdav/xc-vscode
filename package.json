@@ -5,7 +5,7 @@
   },
   "displayName": "XC",
   "description": "",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "publisher": "xc-vscode",
   "icon": "resources/xc.png",
   "engines": {
@@ -25,7 +25,7 @@
         {
           "id": "xc-vscode-container",
           "title": "XC",
-          "icon": "resources/xc.svg"
+          "icon": "resources/xc-svg.svg"
         }
       ]
     },
