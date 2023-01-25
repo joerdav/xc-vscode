@@ -12,7 +12,7 @@ Lists and runs tasks defined in the README.
 
 ## Requirements
 
-- <https://github.com/joe-davidson1802/xc> - must be in your PATH.
+- <https://github.com/joerdav/xc> - must be in your PATH.
 
 ## Tasks
 

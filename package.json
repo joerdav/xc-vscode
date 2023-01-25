@@ -14,16 +14,56 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:xc-vscode.xc"
+    "onView:xc-vscode.xcTasks"
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "xc-vscode-container",
+          "title": "XC",
+          "icon": "resources/xc.svg"
+        }
+      ]
+    },
     "commands": [
+      {
+          "command": "xc-vscode.refreshEntry",
+          "title": "Refresh",
+          "icon": {
+              "light": "resources/light/refresh.svg",
+              "dark": "resources/dark/refresh.svg"
+          }
+      },
       {
         "command": "xc-vscode.xc",
         "title": "xc: Run Task"
       }
-    ]
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "xc-vscode.xcTasks",
+          "name": "XC Tasks"
+        }
+      ],
+      "xc-vscode-container": [
+        {
+          "id": "xc-vscode.xcTasksContainer",
+          "name": "XC Tasks"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+          {
+              "command": "xc-vscode.refreshEntry",
+              "when": "view == xc-vscode.xcTasks",
+              "group": "navigation"
+          }
+      ]
+  }
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",

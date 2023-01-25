@@ -2,46 +2,98 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 import * as cp from "child_process";
+import * as path from "path";
+
+export class TaskProvider implements vscode.TreeDataProvider<Task> {
+  constructor(private workspaceRoot: string | undefined) {}
+
+  getTreeItem(element: Task): vscode.TreeItem {
+    return element;
+  }
+  private _onDidChangeTreeData: vscode.EventEmitter<
+    Task | undefined | null | void
+  > = new vscode.EventEmitter<Task | undefined | null | void>();
+  readonly onDidChangeTreeData: vscode.Event<Task | undefined | null | void> =
+    this._onDidChangeTreeData.event;
+
+  refresh(): void {
+    this._onDidChangeTreeData.fire();
+  }
+
+  getChildren(element?: Task): Thenable<Task[]> {
+    if (!element) {
+      return new Promise((resolve, reject) => {
+        const dir = this.workspaceRoot;
+        cp.exec(`xc -short`, { cwd: dir }, (err, stdout, stderr) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          let items: Task[] = [];
+          stdout.split("\n").forEach((t) => {
+            if (!t) {
+              return;
+            }
+            items.push(new Task(t, ""));
+          });
+          resolve(items);
+        });
+      });
+    }
+    return Promise.resolve([]);
+  }
+}
+
+export class Task extends vscode.TreeItem {
+  constructor(
+    public readonly label: string,
+    public readonly description: string
+  ) {
+    super(label);
+    this.command = {
+      command: "xc-vscode.xc",
+      title: "",
+      arguments: [label],
+    };
+  }
+
+  contextValue = "Task";
+
+	iconPath = {
+		light: path.join(__filename, '..', '..', 'resources', 'xc.svg'),
+		dark: path.join(__filename, '..', '..', 'resources', 'xc.svg')
+	};
+}
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-  let disposable = vscode.commands.registerCommand(
-    "xc-vscode.xc",
-    () => {
-		const dir = (vscode.workspace.workspaceFolders||[])[0]?.uri.path
-      cp.exec(`xc -short`, {cwd:dir}, (err, stdout, stderr) => {
-        console.log("stdout: " + stdout);
-        if (err) {
-          console.log("error: " + err);
-        }
+  const rootPath =
+    vscode.workspace.workspaceFolders &&
+    vscode.workspace.workspaceFolders.length > 0
+      ? vscode.workspace.workspaceFolders[0].uri.fsPath
+      : "";
 
-        // The code you place here will be executed every time your command is executed
-        // Display a message box to the user
-        let items: vscode.QuickPickItem[] = [];
-        stdout.split("\n").forEach((t) => {
-          if (!t) return;
-          items.push({
-            label: t,
-            description: `xc ${t}`,
-          });
-        });
-        vscode.window.showQuickPick(items).then((selection) => {
-          // the user canceled the selection
-          if (!selection) {
-            return;
-          }
-		  const cmd = selection.description?.toString() || ""
-		  const term = vscode.window.createTerminal(cmd)
-		  term.sendText("cd "+dir, true)
-		  term.sendText(cmd, true)
-		  term.show()
-        });
-      });
-    }
+  vscode.commands.registerCommand("xc-vscode.xc", (cmd) => {
+    const term =
+      vscode.window.terminals.find((t) => t.name === "xc-vscode") ??
+      vscode.window.createTerminal("xc-vscode");
+
+    term.sendText("cd " + rootPath, true);
+    term.sendText("xc " + cmd, true);
+    term.show();
+  });
+  const taskProvider = new TaskProvider(rootPath);
+  vscode.window.createTreeView("xc-vscode.xcTasks", {
+    treeDataProvider: taskProvider,
+  });
+  vscode.window.createTreeView("xc-vscode.xcTasksContainer", {
+    treeDataProvider: taskProvider,
+  });
+
+  vscode.commands.registerCommand("xc-vscode.refreshEntry", () =>
+    taskProvider.refresh()
   );
-
-  context.subscriptions.push(disposable);
 }
 
 // this method is called when your extension is deactivated
